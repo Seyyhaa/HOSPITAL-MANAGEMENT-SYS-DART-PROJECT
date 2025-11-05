@@ -1,0 +1,12 @@
+name: hospital_app
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dev_dependencies:
+  test: ^1.25.0
+
+
+dependencies:
+  http: ^1.2.1 
+  uuid: ^4.3.3

@@ -21,7 +21,7 @@ class Patient extends Person{
 
 
   factory Patient.fromJson(Map<String, dynamic> json){
-    return Patient(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], medicalRecordNo: json['medicalRecordNo'])
+    return Patient(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], medicalRecordNo: json['medicalRecordNo']);
   }
 
 

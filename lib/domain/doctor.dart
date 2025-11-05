@@ -19,7 +19,7 @@ class Doctor extends Person{
     };
   }
 factory Doctor.fromJson(Map<String, dynamic> json){
-    return Doctor(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], specialization: json['specialization'])
+    return Doctor(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], specialization: json['specialization']);
   } 
 
 }
