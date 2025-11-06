@@ -21,8 +21,6 @@ class Hospitalservice {
   Hospitalservice({FileRepository? repository})
       : repo = repository ?? FileRepository();
 
- 
-
   Patient registerPatient({
     required String name,
     required int age,
@@ -90,7 +88,7 @@ class Hospitalservice {
     Patient? patient = findPatientById(patientId);
     Doctor? doctor = findDoctorById(doctorId);
 
-    // 2. Add checks for bad IDs
+
     if (patient == null) {
       print('Error: Patient not found!');
       return null;
@@ -100,13 +98,12 @@ class Hospitalservice {
       return null;
     }
 
-    // Business rule: Doctor cannot have two appointments at same time
     if (!validateDoctorAvailability(doctorId, dateTime)) {
       print('Doctor is already booked at this time!');
       return null;
     }
 
-    // Business rule: Patient cannot have two appointments at same time
+   
     if (!validatePatientAvailability(patientId, dateTime)) {
       print('Patient already has appointment at this time!');
       return null;
@@ -174,54 +171,49 @@ class Hospitalservice {
     await repo.saveAppointments(appointmentsJson);
   }
 
+  Future<void> loadAll() async {
+    try {
+      final results = await Future.wait([
+        repo.loadPatients(),
+        repo.loadDoctors(),
+        repo.loadAppointments(),
+      ]);
 
-Future<void> loadAll() async {
-  try {
-    final results = await Future.wait([
-      repo.loadPatients(),     
-      repo.loadDoctors(),
-      repo.loadAppointments(),
-    ]);
+      final patientsJson = List<Map<String, dynamic>>.from(results[0]);
+      final doctorsJson = List<Map<String, dynamic>>.from(results[1]);
+      final appointmentsJson = List<Map<String, dynamic>>.from(results[2]);
 
-    final patientsJson = List<Map<String, dynamic>>.from(results[0]);
-    final doctorsJson = List<Map<String, dynamic>>.from(results[1]);
-    final appointmentsJson = List<Map<String, dynamic>>.from(results[2]);
+      final loadedPatients = patientsJson.map(Patient.fromJson).toList();
+      final loadedDoctors = doctorsJson.map(Doctor.fromJson).toList();
+      final loadedAppointments =
+          appointmentsJson.map(Appointment.fromJson).toList();
 
-    final loadedPatients =
-        patientsJson.map(Patient.fromJson).toList();
-    final loadedDoctors =
-        doctorsJson.map(Doctor.fromJson).toList();
-    final loadedAppointments =
-        appointmentsJson.map(Appointment.fromJson).toList();
-
-    loadData(
-      loadedPatients: loadedPatients,
-      loadedDoctors: loadedDoctors,
-      loadedAppointments: loadedAppointments,
-    );
-  } catch (e) {
-    print('Error loading data: $e');
+      loadData(
+        loadedPatients: loadedPatients,
+        loadedDoctors: loadedDoctors,
+        loadedAppointments: loadedAppointments,
+      );
+    } catch (e) {
+      print('Error loading data: $e');
+    }
   }
-}
-
-
 
   void loadData({
     required List<Patient> loadedPatients,
     required List<Doctor> loadedDoctors,
     required List<Appointment> loadedAppointments,
   }) {
-    // 1. "Open the drawer and take old files out"
+
     _patients.clear();
     _doctors.clear();
     _appointments.clear();
 
-    // 2. "Put all the new files in"
+
     _patients.addAll(loadedPatients);
     _doctors.addAll(loadedDoctors);
     _appointments.addAll(loadedAppointments);
 
-    // 3. "Reset the ID counter" (This logic is the same)
+ 
     if (_patients.isNotEmpty) {
       Patient lastPatient = _patients.last;
       String lastId = lastPatient.id;

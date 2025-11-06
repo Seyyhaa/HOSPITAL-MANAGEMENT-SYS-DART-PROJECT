@@ -1,8 +1,5 @@
-
 import 'dart:io';
 import 'package:hospital_app/domain/hospital_services.dart';
-
-
 
 void showMenu() {
   print('');
@@ -112,7 +109,7 @@ void registerDoctorUI(Hospitalservice service) {
 void scheduleAppointmentUI(Hospitalservice service) {
   print('--- Schedule Appointment ---');
 
-  // Show patients quick list
+  
   print('Patients:');
   for (var p in service.allPatients) {
     print('${p.id} - ${p.name}');
@@ -120,7 +117,7 @@ void scheduleAppointmentUI(Hospitalservice service) {
   stdout.write('Enter Patient ID: ');
   final pid = stdin.readLineSync() ?? '';
 
-  // Show doctors quick list
+  
   print('Doctors:');
   for (var d in service.allDoctors) {
     print('${d.id} - ${d.name} (${d.specialization})');

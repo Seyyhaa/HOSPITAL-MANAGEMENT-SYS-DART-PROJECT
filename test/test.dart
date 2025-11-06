@@ -1,19 +1,17 @@
-// test/hospital_service_test.dart
 import 'package:test/test.dart';
 import '../lib/domain/hospital_services.dart';
 import '../lib/data/file_repository.dart';
 
-// For domain tests we don't need actual files; provide a repository with temp paths
 void main() {
   late Hospitalservice service;
 
   setUp(() {
-    // Use file paths that won't be used in test environment (or provide mock repository)
     service = Hospitalservice(repository: FileRepository(
       patientsPath: 'test_data/patients_test.json',
       doctorsPath: 'test_data/doctors_test.json',
       appointmentsPath: 'test_data/appointments_test.json',
-    ));
+    )
+    );
   });
 
   test('Register Patient', () {
