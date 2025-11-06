@@ -12,7 +12,6 @@ class FileRepository {
     this.appointmentsPath = './data/assets/appointment.json',
   });
 
-  // Helper: ensure folder exists
   void _ensureFolderExists(String path) {
     final dir = Directory(path).parent;
     if (!dir.existsSync()) {
