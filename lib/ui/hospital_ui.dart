@@ -1,32 +1,8 @@
-// bin/main.dart
+
 import 'dart:io';
-import 'package:hospital_app/domain/hospitalService.dart';
-import '../data/file_repository.dart';
+import 'package:hospital_app/domain/hospital_services.dart';
 
 
-
-void main() async {
-  // Initialize repository with default paths (creates /data files)
-  final repo = FileRepository(
-    patientsPath: '../../data/patient.json',
-    doctorsPath: '../../data/doctor.json',
-    appointmentsPath: '../../data/appointment.json',
-  );
-
-  final service = Hospitalservice(repository: repo);
-
-  // Try load existing data (if any)
-  await service.loadAll();
-
-  while (true) {
-    showMenu();
-    stdout.write('Enter choice: ');
-    final choice = stdin.readLineSync();
-
-    if (choice == null) continue;
-    if (!await handleMenuInput(choice.trim(), service)) break;
-  }
-}
 
 void showMenu() {
   print('');
@@ -178,7 +154,8 @@ void scheduleAppointmentUI(Hospitalservice service) {
 void viewPatientsUI(Hospitalservice service) {
   print('--- Patients ---');
   for (var p in service.allPatients) {
-    print('${p.id} | ${p.name} | ${p.age} | ${p.phone} | MRN:${p.medicalRecordNo}');
+    print(
+        '${p.id} | ${p.name} | ${p.age} | ${p.phone} | MRN:${p.medicalRecordNo}');
   }
 }
 
@@ -192,7 +169,8 @@ void viewDoctorsUI(Hospitalservice service) {
 void viewAppointmentsUI(Hospitalservice service) {
   print('--- Appointments ---');
   for (var a in service.allAppointments) {
-    print('${a.id} | ${a.dateTime.toString()} | Patient: ${a.patient.name} (${a.patient.id}) | Doctor: ${a.doctor.name} (${a.doctor.id})');
+    print(
+        '${a.id} | ${a.dateTime.toString()} | Patient: ${a.patient.name} (${a.patient.id}) | Doctor: ${a.doctor.name} (${a.doctor.id})');
   }
 }
 

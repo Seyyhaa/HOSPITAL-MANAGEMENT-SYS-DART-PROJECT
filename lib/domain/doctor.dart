@@ -1,12 +1,18 @@
-
 import 'person.dart';
 
-
-class Doctor extends Person{
-
+class Doctor extends Person {
   final String specialization;
-  Doctor({required super.id, required super.name, required super.age, required super.gender, required super.phone, required this.specialization});
-
+  Doctor(
+      {required super.id,
+      required super.name,
+      required super.age,
+      required super.gender,
+      required super.phone,
+      required this.specialization}) {
+    if (specialization.trim().isEmpty) {
+      throw ArgumentError("Specialization can not be EMPTY!");
+    }
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -15,13 +21,17 @@ class Doctor extends Person{
       'age': age,
       'gender': gender,
       'phone': phone,
-      'spespecialization':specialization,
+      'spespecialization': specialization,
     };
   }
-factory Doctor.fromJson(Map<String, dynamic> json){
-    return Doctor(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], specialization: json['specialization']);
-  } 
 
+  factory Doctor.fromJson(Map<String, dynamic> json) {
+    return Doctor(
+        id: json['id'],
+        name: json['name'],
+        age: json['age'],
+        gender: json['gender'],
+        phone: json['phone'],
+        specialization: json['specialization']);
+  }
 }
-
-

@@ -1,12 +1,19 @@
-
 import "person.dart";
 
-
-class Patient extends Person{
-
+class Patient extends Person {
   final String medicalRecordNo;
 
-  Patient({required super.id,required super.name,required super.age,required super.gender,required super.phone,required this.medicalRecordNo});
+  Patient(
+      {required super.id,
+      required super.name,
+      required super.age,
+      required super.gender,
+      required super.phone,
+      required this.medicalRecordNo}) {
+    if (medicalRecordNo.trim().isEmpty) {
+      throw ArgumentError('Medical record number cannot be empty.');
+    }
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -19,11 +26,13 @@ class Patient extends Person{
     };
   }
 
-
-  factory Patient.fromJson(Map<String, dynamic> json){
-    return Patient(id: json['id'], name: json['name'], age: json['age'], gender: json['gender'], phone: json['phone'], medicalRecordNo: json['medicalRecordNo']);
+  factory Patient.fromJson(Map<String, dynamic> json) {
+    return Patient(
+        id: json['id'],
+        name: json['name'],
+        age: json['age'],
+        gender: json['gender'],
+        phone: json['phone'],
+        medicalRecordNo: json['medicalRecordNo']);
   }
-
-
-  
 }

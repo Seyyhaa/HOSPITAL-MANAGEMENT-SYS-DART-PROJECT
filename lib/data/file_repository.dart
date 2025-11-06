@@ -1,18 +1,15 @@
-// lib/data/file_repository.dart
 import 'dart:convert';
 import 'dart:io';
 
-/// Simple file repository (JSON) — stores arrays of objects.
-/// Files are created in the local working directory under 'data/' folder.
 class FileRepository {
   final String patientsPath;
   final String doctorsPath;
   final String appointmentsPath;
 
   FileRepository({
-    this.patientsPath = '../../data/patient.json',
-    this.doctorsPath = '../../data/doctor.json',
-    this.appointmentsPath = '../../data/appointment.json',
+    this.patientsPath = './data/patient.json',
+    this.doctorsPath = './data/doctor.json',
+    this.appointmentsPath = './data/assets/appointment.json',
   });
 
   // Helper: ensure folder exists

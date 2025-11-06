@@ -1,6 +1,6 @@
 // test/hospital_service_test.dart
 import 'package:test/test.dart';
-import '../lib/domain/hospitalService.dart';
+import '../lib/domain/hospital_services.dart';
 import '../lib/data/file_repository.dart';
 
 // For domain tests we don't need actual files; provide a repository with temp paths

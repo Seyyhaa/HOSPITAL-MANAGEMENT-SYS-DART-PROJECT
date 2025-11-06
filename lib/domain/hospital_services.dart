@@ -21,6 +21,8 @@ class Hospitalservice {
   Hospitalservice({FileRepository? repository})
       : repo = repository ?? FileRepository();
 
+ 
+
   Patient registerPatient({
     required String name,
     required int age,
@@ -163,7 +165,6 @@ class Hospitalservice {
   }
 
   Future<void> saveAll() async {
-    // Your saveAll() code is perfect!
     final patientsJson = _patients.map((p) => p.toJson()).toList();
     final doctorsJson = _doctors.map((d) => d.toJson()).toList();
     final appointmentsJson = _appointments.map((a) => a.toJson()).toList();
@@ -173,38 +174,36 @@ class Hospitalservice {
     await repo.saveAppointments(appointmentsJson);
   }
 
-  Future<void> loadAll() async {
-    try {
-      // 1. Use the repo to load all the raw JSON lists
-      final results = await Future.wait([
-        repo.loadPatients(),
-        repo.loadDoctors(),
-        repo.loadAppointments(),
-      ]);
 
-      // 2. Get the raw lists back (they are List<dynamic>)
-      final patientsJson = results[0] as List<dynamic>;
-      final doctorsJson = results[1] as List<dynamic>;
-      final appointmentsJson = results[2] as List<dynamic>;
+Future<void> loadAll() async {
+  try {
+    final results = await Future.wait([
+      repo.loadPatients(),     
+      repo.loadDoctors(),
+      repo.loadAppointments(),
+    ]);
 
-      // 3. Convert from JSON back to real objects
-      final loadedPatients =
-          patientsJson.map((json) => Patient.fromJson(json)).toList();
-      final loadedDoctors =
-          doctorsJson.map((json) => Doctor.fromJson(json)).toList();
-      final loadedAppointments =
-          appointmentsJson.map((json) => Appointment.fromJson(json)).toList();
+    final patientsJson = List<Map<String, dynamic>>.from(results[0]);
+    final doctorsJson = List<Map<String, dynamic>>.from(results[1]);
+    final appointmentsJson = List<Map<String, dynamic>>.from(results[2]);
 
-      // 4. Call your *existing* loadData method to load them into the brain
-      loadData(
-        loadedPatients: loadedPatients,
-        loadedDoctors: loadedDoctors,
-        loadedAppointments: loadedAppointments,
-      );
-    } catch (e) {
-      print('Error loading all data: $e');
-    }
+    final loadedPatients =
+        patientsJson.map(Patient.fromJson).toList();
+    final loadedDoctors =
+        doctorsJson.map(Doctor.fromJson).toList();
+    final loadedAppointments =
+        appointmentsJson.map(Appointment.fromJson).toList();
+
+    loadData(
+      loadedPatients: loadedPatients,
+      loadedDoctors: loadedDoctors,
+      loadedAppointments: loadedAppointments,
+    );
+  } catch (e) {
+    print('Error loading data: $e');
   }
+}
+
 
 
   void loadData({
