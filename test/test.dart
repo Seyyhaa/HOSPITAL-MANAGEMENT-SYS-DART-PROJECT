@@ -1,4 +1,3 @@
-
 import 'package:test/test.dart';
 import 'package:hospital_app/data/file_repository.dart';
 import 'package:hospital_app/domain/hospital_services.dart';
@@ -6,7 +5,6 @@ import 'package:hospital_app/domain/hospital_services.dart';
 void main() {
   late Hospitalservice service;
 
-  
   setUp(() {
     service = Hospitalservice(
       repository: FileRepository(
@@ -17,26 +15,24 @@ void main() {
     );
   });
 
-
   test('Register Patient', () {
     final p = service.registerPatient(
-      name: 'Alice',
-      age: 30,
+      name: 'Vipor',
+      age: 20,
       gender: 'F',
       phone: '0123456789',
       medicalRecordNo: 'MRN001',
     );
 
     expect(service.allPatients.length, 1);
-    expect(p.name, equals('Alice'));
+    expect(p.name, equals('Vipor'));
     expect(p.id.startsWith('P'), isTrue);
   });
 
- 
   test('Register Doctor', () {
     final d = service.registerDoctor(
-      name: 'Dr Bob',
-      age: 45,
+      name: 'Dr Ronan',
+      age: 25,
       gender: 'M',
       phone: '0987654321',
       specialization: 'Cardiology',
@@ -47,8 +43,7 @@ void main() {
     expect(d.id.startsWith('D'), isTrue);
   });
 
-  
-  test('Schedule Appointment (happy path)', () {
+  test('Schedule Appointment', () {
     final p = service.registerPatient(
       name: 'Pat',
       age: 22,
@@ -56,15 +51,16 @@ void main() {
       phone: '011111111',
       medicalRecordNo: 'MRN002',
     );
+
     final d = service.registerDoctor(
-      name: 'Dr A',
+      name: 'Dr Angel',
       age: 40,
       gender: 'F',
       phone: '02222222',
       specialization: 'General',
     );
-    final dt = DateTime(2025, 10, 10, 9, 0);
 
+    final dt = DateTime(2025, 10, 10, 9, 0);
     final appt = service.scheduleAppointment(
       patientId: p.id,
       doctorId: d.id,
@@ -76,24 +72,25 @@ void main() {
     expect(service.allAppointments.first.dateTime, dt);
   });
 
-  
   test('Prevent doctor double booking', () {
     final p1 = service.registerPatient(
-      name: 'P1',
+      name: 'Por',
       age: 20,
       gender: 'M',
       phone: '01',
       medicalRecordNo: 'MRN3',
     );
+
     final p2 = service.registerPatient(
-      name: 'P2',
+      name: 'Pich',
       age: 21,
       gender: 'F',
       phone: '02',
       medicalRecordNo: 'MRN4',
     );
+
     final d = service.registerDoctor(
-      name: 'Dr X',
+      name: 'Dr Ya',
       age: 50,
       gender: 'M',
       phone: '03',
@@ -102,7 +99,6 @@ void main() {
 
     final dt = DateTime(2025, 11, 11, 10, 0);
 
-    // First appointment should work
     final a1 = service.scheduleAppointment(
       patientId: p1.id,
       doctorId: d.id,
@@ -110,7 +106,6 @@ void main() {
     );
     expect(a1, isNotNull);
 
-    // Second appointment (same time, same doctor) should fail
     final a2 = service.scheduleAppointment(
       patientId: p2.id,
       doctorId: d.id,
@@ -119,32 +114,32 @@ void main() {
     expect(a2, isNull);
   });
 
-  
   test('Prevent patient double booking', () {
     final p = service.registerPatient(
-      name: 'Solo',
-      age: 33,
+      name: 'Viya',
+      age: 18,
       gender: 'F',
       phone: '04',
       medicalRecordNo: 'MRN5',
     );
+
     final d1 = service.registerDoctor(
-      name: 'Dr1',
+      name: 'Dr Sokviya',
       age: 35,
       gender: 'M',
       phone: '05',
       specialization: 'ENT',
     );
+
     final d2 = service.registerDoctor(
-      name: 'Dr2',
+      name: 'Dr Mikey',
       age: 45,
-      gender: 'F',
+      gender: 'M',
       phone: '06',
       specialization: 'Obstetrics',
     );
 
     final dt = DateTime(2025, 12, 12, 11, 0);
-
     final a1 = service.scheduleAppointment(
       patientId: p.id,
       doctorId: d1.id,
@@ -152,7 +147,6 @@ void main() {
     );
     expect(a1, isNotNull);
 
-    // Same patient, same time → should fail
     final a2 = service.scheduleAppointment(
       patientId: p.id,
       doctorId: d2.id,
@@ -161,56 +155,53 @@ void main() {
     expect(a2, isNull);
   });
 
-  
   test('Reject appointment with unknown patient', () {
     final d = service.registerDoctor(
-      name: 'Dr Y',
+      name: 'Dr Ying',
       age: 40,
       gender: 'M',
       phone: '07',
       specialization: 'Dermatology',
     );
-    final dt = DateTime(2025, 9, 9, 8, 0);
 
+    final dt = DateTime(2025, 9, 9, 8, 0);
     final appt = service.scheduleAppointment(
-      patientId: 'P999999', // Not registered
+      patientId: 'P999999',
       doctorId: d.id,
       dateTime: dt,
     );
-
     expect(appt, isNull);
   });
 
-    test('Reject appointment with unknown doctor', () {
+  test('Reject appointment with unknown doctor', () {
     final p = service.registerPatient(
-      name: 'Ghost',
-      age: 28,
+      name: 'Seyha',
+      age: 20,
       gender: 'M',
       phone: '08',
       medicalRecordNo: 'MRN6',
     );
-    final dt = DateTime(2025, 8, 8, 9, 0);
 
+    final dt = DateTime(2025, 8, 8, 9, 0);
     final appt = service.scheduleAppointment(
       patientId: p.id,
-      doctorId: 'D999999', // Not registered
+      doctorId: 'D999999',
       dateTime: dt,
     );
-
     expect(appt, isNull);
   });
 
-  
   test('List appointments works', () {
     final p = service.registerPatient(
-      name: 'ListP',
+      name: 'Vipo',
       age: 21,
       gender: 'F',
       phone: '09',
       medicalRecordNo: 'MRN7',
     );
+
     final d = service.registerDoctor(
-      name: 'ListD',
+      name: 'Ka',
       age: 38,
       gender: 'M',
       phone: '10',
@@ -226,17 +217,17 @@ void main() {
     expect(service.allAppointments.length, 2);
   });
 
-  
   test('Cancel Appointment', () {
     final p = service.registerPatient(
-      name: 'CancelP',
+      name: 'Kaka',
       age: 25,
-      gender: 'M',
+      gender: 'F',
       phone: '0111',
       medicalRecordNo: 'MRN8',
     );
+
     final d = service.registerDoctor(
-      name: 'CancelD',
+      name: 'Dom',
       age: 55,
       gender: 'M',
       phone: '0222',
@@ -255,19 +246,17 @@ void main() {
     expect(service.allAppointments.isEmpty, isTrue);
   });
 
-  
   test('Save and Load Data works', () async {
-    // Register and save
     final p = service.registerPatient(
-      name: 'SaveTest',
+      name: 'Jk',
       age: 20,
       gender: 'M',
       phone: '0123',
       medicalRecordNo: 'MRN10',
     );
+
     await service.saveAll();
 
-    // Create a new service and load
     final newService = Hospitalservice(
       repository: FileRepository(
         patientsPath: 'test_data/patients_test.json',
@@ -275,9 +264,10 @@ void main() {
         appointmentsPath: 'test_data/appointments_test.json',
       ),
     );
+
     await newService.loadAll();
 
     expect(newService.allPatients.length, greaterThanOrEqualTo(1));
-    expect(newService.findPatientById(p.id)?.name, equals('SaveTest'));
+    expect(newService.findPatientById(p.id)?.name, equals('Jk'));
   });
 }
